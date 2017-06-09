@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams} from 'ionic-angular';
 
 import { ItemDetailsPage } from '../item-details/item-details';
 import { Http } from '@angular/http';
+import 'rxjs/add/operator/map';
 
 @Component({
   selector: 'page-list',
@@ -12,12 +13,15 @@ import { Http } from '@angular/http';
 export class ListPage {
   icons: string[];
   items: Array<{title: string, note: string, icon: string}>;
+  cards: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public http: Http) {
     this.icons = ['flask', 'wifi', 'beer', 'football', 'basketball', 'paper-plane',
     'american-football', 'boat', 'bluetooth', 'build'];
 
-    this.getCards();
+    this.cards = this.getCards();
+
+    console.log(this.cards);
 
     this.items = [];
     for(let i = 1; i < 11; i++) {
@@ -36,8 +40,6 @@ export class ListPage {
   }
 
   getCards() {
-    this.http.request('http://localhost:8000/api/cards', {
-      method: 'GET'
-    }).map()
+    return this.http.get('http://localhost:8000/api/docs').map(res => res.json());
   }
 }
